@@ -1,0 +1,53 @@
+_I wont going to show how to configure email server!_
+
+* Trigger defitition
+----
+config system automation-trigger
+    edit "itfc_downTrigger"
+        set event-type event-log
+        set logid 20099
+	config fields
+            edit 1
+                set name "status"
+                set value "down"
+            next
+    next
+end
+----
+
+* Action defitition
+----
+config system automation-action
+    edit "itfc_downSendEmail"
+        set action-type email
+        set email-to "you@domain.com"
+        set email-subject "Alert! one interface is down."
+        set email-body "One of yours interface goes down"
+    next
+end
+----
+
+* Stitch defitition
+----
+config system automation-stitch
+    edit "itfc_downEmailAlert"
+        set trigger "itfc_downTrigger"
+        set actions "itfc_downSendEmail"
+    next
+end
+----
+
+* Validation
+----
+show system automation-stitch
+show system automation-trigger
+show system automation-action
+----
+
+* Testing
+----
+config system interface
+    edit "port1"  
+    set status down
+end
+----
